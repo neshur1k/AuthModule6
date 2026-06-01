@@ -13,44 +13,35 @@ class UsersViewModel(
     private val getUsersUseCase: GetUsersUseCase
 ) : ViewModel() {
 
-    private val _uiState =
-        MutableStateFlow(UsersUiState())
-
-    val uiState: StateFlow<UsersUiState> =
-        _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(UsersUiState())
+    val uiState: StateFlow<UsersUiState> = _uiState.asStateFlow()
 
     init {
         loadUsers()
-        Log.d("VM", "UsersViewModel created")
+        Log.d("VM", "UsersViewModel created: ${this.hashCode()}")
     }
 
     fun loadUsers() {
-
         viewModelScope.launch {
 
-            _uiState.value =
-                _uiState.value.copy(
-                    isLoading = true,
-                    error = null
-                )
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                error = null
+            )
 
             try {
+                val users = getUsersUseCase()
 
-                val users =
-                    getUsersUseCase()
-
-                _uiState.value =
-                    UsersUiState(
-                        users = users
-                    )
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    users = users
+                )
 
             } catch (e: Exception) {
-
-                _uiState.value =
-                    UsersUiState(
-                        error =
-                        e.message ?: "Ошибка"
-                    )
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "Ошибка"
+                )
             }
         }
     }

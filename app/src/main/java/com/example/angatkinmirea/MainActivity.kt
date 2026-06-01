@@ -20,8 +20,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val container = AppContainer(applicationContext)
-
         setContent {
             AngatkinMIREATheme {
                 AppNavGraph()

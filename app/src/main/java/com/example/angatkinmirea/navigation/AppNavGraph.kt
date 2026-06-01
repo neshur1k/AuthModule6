@@ -1,18 +1,13 @@
 package com.example.angatkinmirea.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.example.angatkinmirea.di.AppContainer
-import com.example.angatkinmirea.presentation.login.LoginScreen
-import com.example.angatkinmirea.presentation.login.LoginViewModel
-import com.example.angatkinmirea.presentation.login.LoginViewModelFactory
+import com.example.angatkinmirea.presentation.login.*
 import com.example.angatkinmirea.presentation.users.*
 import com.example.angatkinmirea.presentation.detail.*
 
@@ -22,9 +17,8 @@ fun AppNavGraph() {
     val navController = rememberNavController()
     val context = LocalContext.current
 
-    val container = remember {
-        AppContainer(context)
-    }
+    // ✅ SINGLETON container (stable)
+    val container = remember { AppContainer(context) }
 
     NavHost(
         navController = navController,
@@ -32,7 +26,6 @@ fun AppNavGraph() {
     ) {
 
         composable(Routes.LOGIN) {
-
             val vm: LoginViewModel = viewModel(
                 factory = LoginViewModelFactory(container.loginUseCase)
             )
@@ -49,6 +42,7 @@ fun AppNavGraph() {
 
         composable(Routes.USERS) {
 
+            // ❌ УБРАЛИ users_graph (его нет)
             val vm: UsersViewModel = viewModel(
                 factory = UsersViewModelFactory(container.getUsersUseCase)
             )
@@ -60,7 +54,7 @@ fun AppNavGraph() {
                 },
                 onLogout = {
                     navController.navigate(Routes.LOGIN) {
-                        popUpTo(0)
+                        popUpTo(Routes.USERS) { inclusive = true }
                     }
                 }
             )
@@ -69,9 +63,7 @@ fun AppNavGraph() {
         composable(
             route = "${Routes.DETAIL}/{id}",
             arguments = listOf(
-                navArgument("id") {
-                    type = NavType.IntType
-                }
+                navArgument("id") { type = NavType.IntType }
             )
         ) { backStackEntry ->
 
