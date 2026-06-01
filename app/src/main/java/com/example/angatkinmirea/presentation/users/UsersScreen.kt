@@ -14,7 +14,8 @@ import androidx.compose.ui.text.font.FontWeight
 @Composable
 fun UsersScreen(
     viewModel: UsersViewModel,
-    onUserClick: (Int) -> Unit
+    onUserClick: (Int) -> Unit,
+    onLogout: () -> Unit
 ) {
 
     val state by viewModel.uiState.collectAsState()
@@ -47,6 +48,15 @@ fun UsersScreen(
         }
 
         else -> {
+
+            Button(
+                onClick = onLogout,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                Text("Выйти")
+            }
 
             LazyColumn {
 

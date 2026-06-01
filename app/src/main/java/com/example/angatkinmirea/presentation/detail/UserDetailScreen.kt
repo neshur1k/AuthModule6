@@ -12,7 +12,7 @@ import coil.compose.AsyncImage
 fun UserDetailScreen(
     userId: Int,
     viewModel: UserDetailViewModel,
-    onLogout: () -> Unit
+    onBack: () -> Unit
 ) {
 
     val state by viewModel.state.collectAsState()
@@ -51,9 +51,12 @@ fun UserDetailScreen(
 
                 Text("${user.firstName} ${user.lastName}")
                 Text(user.email)
+                Text("ID: $userId",)
 
-                Button(onClick = onLogout) {
-                    Text("Выйти")
+                Button(
+                    onClick = onBack
+                ) {
+                    Text("Назад")
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.example.angatkinmirea.presentation.users
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.angatkinmirea.domain.usecase.GetUsersUseCase
@@ -20,6 +21,7 @@ class UsersViewModel(
 
     init {
         loadUsers()
+        Log.d("VM", "UsersViewModel created")
     }
 
     fun loadUsers() {

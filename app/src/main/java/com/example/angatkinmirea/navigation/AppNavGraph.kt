@@ -57,6 +57,11 @@ fun AppNavGraph() {
                 viewModel = vm,
                 onUserClick = { id ->
                     navController.navigate("${Routes.DETAIL}/$id")
+                },
+                onLogout = {
+                    navController.navigate(Routes.LOGIN) {
+                        popUpTo(0)
+                    }
                 }
             )
         }
@@ -81,10 +86,8 @@ fun AppNavGraph() {
             UserDetailScreen(
                 userId = id,
                 viewModel = vm,
-                onLogout = {
-                    navController.navigate(Routes.LOGIN) {
-                        popUpTo(0)
-                    }
+                onBack = {
+                    navController.popBackStack()
                 }
             )
         }
