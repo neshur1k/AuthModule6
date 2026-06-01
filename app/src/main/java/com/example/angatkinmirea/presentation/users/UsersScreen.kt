@@ -1,0 +1,96 @@
+package com.example.angatkinmirea.presentation.users
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.text.font.FontWeight
+
+@Composable
+fun UsersScreen(
+    viewModel: UsersViewModel,
+    onUserClick: (Int) -> Unit
+) {
+
+    val state by viewModel.uiState.collectAsState()
+
+    when {
+
+        state.isLoading -> {
+
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        state.error != null -> {
+
+            Column {
+
+                Text(state.error!!)
+
+                Button(
+                    onClick = {
+                        viewModel.loadUsers()
+                    }
+                ) {
+                    Text("Повторить")
+                }
+            }
+        }
+
+        else -> {
+
+            LazyColumn {
+
+                items(state.users) { user ->
+
+                    Card(
+                        onClick = {
+                            onUserClick(user.id)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+
+                            AsyncImage(
+                                model = user.image,
+                                contentDescription = null,
+                                modifier = Modifier.size(64.dp)
+                            )
+
+                            Spacer(
+                                modifier = Modifier.width(12.dp)
+                            )
+
+                            Column {
+
+                                Text(
+                                    text = "${user.firstName} ${user.lastName}",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+
+                                Text(
+                                    text = user.email,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
